@@ -1,0 +1,41 @@
+role,question,option1,option2,option3,option4,answer
+Full Stack Web Developer,Which of the following is NOT a NoSQL database?,MongoDB,Cassandra,PostgreSQL,Redis,PostgreSQL
+Full Stack Web Developer,What is the purpose of Webpack in a full-stack project?,Bundling assets,Database management,Security enforcement,Backend API handling,Bundling assets
+Full Stack Web Developer,Which of these is NOT a frontend framework?,React,Angular,Django,Vue,Django
+Full Stack Web Developer,Which HTTP method is idempotent?,POST,PUT,DELETE,GET,PUT
+Full Stack Web Developer,What does CSRF stand for?,Cross-Site Request Forgery,Client-Side Rendering Failure,Cascading Style Rendering Format,Critical System Redundancy Function,Cross-Site Request Forgery
+Full Stack Web Developer,Which database is best suited for handling complex relationships?,MongoDB,MySQL,DynamoDB,Redis,MySQL
+Full Stack Web Developer,What does REST stand for?,Representational State Transfer,Remote Execution and State Tracking,Random Event Source Transmission,Real-time Event Synchronization Technology,Representational State Transfer
+Full Stack Web Developer,What is the main benefit of using TypeScript over JavaScript?,Faster execution,Static typing,Better database integration,Lower memory usage,Static typing
+Full Stack Web Developer,Which of the following is NOT a HTTP status code?,201,404,600,503,600
+Full Stack Web Developer,Which technology is used to create APIs in Node.js?,Django,Flask,Express,Spring Boot,Express
+Java Developer,Which keyword is used to prevent method overriding?,final,static,private,volatile,final
+Java Developer,What is the default value of a boolean variable in Java?,true,false,null,0,false
+Java Developer,Which of these collections maintains insertion order?,HashSet,TreeSet,LinkedHashMap,HashMap,LinkedHashMap
+Java Developer,What is the parent class of all Java classes?,Object,Main,SuperClass,BaseClass,Object
+Java Developer,Which Java feature allows multiple methods with the same name but different parameters?,Overloading,Overriding,Abstraction,Encapsulation,Overloading
+Java Developer,What is the output of `System.out.println(10 + 20 + 'Java');`?,Java30,30Java,Java1020,Compilation Error,30Java
+Java Developer,Which exception is thrown when dividing by zero?,ArithmeticException,NullPointerException,NumberFormatException,IOException,ArithmeticException
+Java Developer,Which of these is NOT a Java access modifier?,public,protected,default,external,external
+Java Developer,Which Java collection is synchronized by default?,ArrayList,LinkedList,Vector,HashMap,Vector
+Java Developer,What does JVM stand for?,Java Virtual Machine,Java Variable Method,Just Virtual Memory,Java Version Manager,Java Virtual Machine
+Python Developer,Which data type is immutable in Python?,List,Set,Dictionary,Tuple,Tuple
+Python Developer,What does the `__init__` method do in Python classes?,Initialize a class object,Delete an object,Create a global variable,Import a module,Initialize a class object
+Python Developer,Which of the following is used for asynchronous programming in Python?,Threading,Multiprocessing,asyncio,Queue,asyncio
+Python Developer,Which method is used to read an entire file as a string?,read(),readline(),readlines(),readtext(),read()
+Python Developer,What is the output of `print(type(lambda x: x))`?,function,lambda,method,NoneType,function
+Python Developer,Which keyword is used to define an anonymous function?,lambda,def,func,anon,lambda
+Python Developer,Which of these is NOT a Python framework?,Django,Flask,Spring,FastAPI,Spring
+Python Developer,What is the correct way to open a file in Python?,open('file.txt'),read('file.txt'),openFile('file.txt'),file.open('file.txt'),open('file.txt')
+Python Developer,Which built-in function returns the number of elements in a list?,size(),count(),length(),len(),len()
+Python Developer,Which of these data structures is unordered?,List,Tuple,Set,Dictionary,Set
+DotNet Developer,Which programming language is mainly used for .NET development?,Java,Python,C#,Ruby,C#
+DotNet Developer,Which .NET framework is used for web applications?,ASP.NET,Entity Framework,Xamarin,WPF,ASP.NET
+DotNet Developer,Which of these is NOT a valid .NET data type?,int,float,char,string(),string()
+DotNet Developer,Which of these collections does NOT allow duplicate values?,List,ArrayList,HashSet,Dictionary,HashSet
+DotNet Developer,What does CLR stand for?,Common Language Runtime,Coded Language Repository,Computer Logic Runtime,Compiled Language Resource,Common Language Runtime
+DotNet Developer,Which keyword is used to define a class in C#?,class,Class,define,struct,class
+DotNet Developer,Which method is used to release unmanaged resources in C#?,Dispose(),Release(),Destroy(),Clear(),Dispose()
+DotNet Developer,Which of these is NOT an OOP principle?,Encapsulation,Polymorphism,Abstraction,Compilation,Compilation
+DotNet Developer,Which keyword is used to declare a constant variable?,const,final,readonly,var,const
+DotNet Developer,What does ASP in ASP.NET stand for?,Active Server Pages,Advanced System Programming,Application Software Platform,Automated Service Protocol,Active Server Pages

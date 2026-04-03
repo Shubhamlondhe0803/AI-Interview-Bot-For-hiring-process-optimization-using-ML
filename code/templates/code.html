@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Coding Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Python Coding Challenge</h1>
+        <p>You will be presented with {{ total }} coding questions one by one.</p>
+        <p>After submitting all answers, you'll see your final results.</p>
+        <a href="{{ url_for('start_code') }}" class="btn">Start Challenge</a>
+    </div>
+</body>
+</html>

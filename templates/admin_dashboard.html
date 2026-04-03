@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #c0392b;
+        }
+
+        .report-section {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        .search-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #27ae60;
+        }
+
+        iframe {
+            width: 80%;
+            height: 500px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        a.resume-link {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a.resume-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Admin Dashboard</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>College</th>
+            <th>Role</th>
+            <th>MCQ Score</th>
+            <th>Verbal Score</th>
+            <th>View Resume</th>
+        </tr>
+        {% for candidate in candidates %}
+        <tr>
+            <td>{{ candidate.id }}</td>
+            <td>{{ candidate.name }}</td>
+            <td>{{ candidate.email }}</td>
+            <td>{{ candidate.college }}</td>
+            <td>{{ candidate.role if candidate.role else 'Not Assigned' }}</td>
+            <td>{{ mcq_results.get(candidate.id).score if mcq_results.get(candidate.id) else 'N/A' }} / 10</td>
+            <td>{{ verbal_results.get(candidate.id, 0) }} / 30</td>
+            <td>
+                {% if candidate.resume_filename %}
+                    <a href="{{ url_for('static', filename='resumes/' + candidate.resume_filename) }}" class="resume-link" target="_blank">View Resume</a>
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{{ url_for('home') }}" class="button">Logout</a>
+    <a href="{{ url_for('verbal_report') }}" class="button">Verbal Answer Report</a>
+
+    <div class="report-section">
+        <h3>View Candidate Report</h3>
+        <form action="{{ url_for('generate_report') }}" method="POST">
+            <input type="text" name="candidate_id" placeholder="Enter Candidate ID" required>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        {% if pdf_path %}
+        <h3>Admin Report for Candidate</h3>
+        <iframe src="{{ pdf_path }}" width="80%" height="500px"></iframe>
+        <br>
+        <a href="{{ pdf_path }}" download class="button">Download Admin Report</a>
+        {% endif %}
+    
+    </div>
+
+</body>
+</html>

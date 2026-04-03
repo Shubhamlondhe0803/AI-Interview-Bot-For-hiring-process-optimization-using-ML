@@ -1,0 +1,77 @@
+<!-- code_result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .score-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .correct {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        pre {
+            white-space: pre-wrap;
+            background: #fff;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .back-button {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Results</h1>
+        <div class="score-card">
+            <h2>Score: {{ correct_count }}/{{ total }}</h2>
+            <p>{{ (correct_count/total*100)|round(1) }}% correct</p>
+        </div>
+
+        {% for answer in answers %}
+        <div class="answer {% if answer.correct %}correct{% else %}incorrect{% endif %}">
+            <p class="result-status">
+                {% if answer.correct %}✅ Correct{% else %}❌ Incorrect{% endif %}
+            </p>
+            <pre>{{ answer.code }}</pre>
+        </div>
+        {% endfor %}
+
+        {% if correct_count >= 2 %}
+            <a href="{{ url_for('verbal_interview', email=email) }}" class="button">Proceed to Verbal Interview</a>
+        {% else %}
+            <a href="{{ url_for('home') }}" class="button back-button">Back to Home</a>
+        {% endif %}
+    </div>
+</body>
+</html>

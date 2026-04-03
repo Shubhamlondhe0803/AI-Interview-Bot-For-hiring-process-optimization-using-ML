@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Bot - Start</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4; /* Light grey background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(129, 54, 234, 0.3);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            color: #444bd5;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        p {
+            color: #657ae0;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            color: #000000;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: 2px 2px 10px #657ae0;
+            background: rgba(255, 255, 255, 0.68);
+            outline: none;
+            transition: 0.3s ease-in-out;
+        }
+
+        .button {
+            width: 80%;
+            margin-top: 15px;
+            padding: 12px;
+            background: linear-gradient(45deg, #657ae0, #657ae0);
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.3s ease-in-out;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Admin Button */
+        .admin-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            font-weight: bold;
+        }
+
+        .admin-button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #c0392b, #a93226);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to the Interview Bot</h1>
+        <p>Please fill out your details to start the interview:</p>
+        
+        <form action="/start" method="post" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="college">College:</label>
+            <input type="text" id="college" name="college" required>
+        
+            <label for="resume">Upload Resume (PDF):</label>
+            <input type="file" id="resume" name="resume" accept=".pdf" required>
+        
+            <button type="submit" class="button">Select Role</button>
+        </form>
+        
+        <!-- Admin Login Button -->
+        <a href="{{ url_for('admin_login') }}" class="button admin-button">Admin Login</a>
+
+    </div>
+
+</body>
+</html>

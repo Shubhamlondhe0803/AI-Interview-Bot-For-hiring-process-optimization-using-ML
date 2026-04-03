@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            color: #444bd5;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .question-container {
+            display: none;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .question-container p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        label:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="radio"] {
+            accent-color: #444bd5;
+            transform: scale(1.2);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            width: 45%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            color: white;
+            background: linear-gradient(45deg, #444bd5, #657ae0);
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #657ae0, #a29bfe);
+        }
+
+        #prevBtn {
+            display: none;
+        }
+
+        #submitBtn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 200px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+        }
+
+        #submitBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, #218838, #1c7430);
+        }
+
+        .icon {
+            font-size: 24px;
+            color: white;
+            background-color: black;
+            border-radius: 50%;
+            box-shadow: #a29bfe;
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <script>
+        let currentQuestion = 0;
+        let totalQuestions = {{ mcqs|length }};
+
+        function showQuestion(index) {
+            let questions = document.querySelectorAll('.question-container');
+            questions.forEach((q, i) => {
+                q.style.display = i === index ? 'block' : 'none';
+            });
+
+            document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-block';
+            document.getElementById('nextBtn').style.display = index === totalQuestions - 1 ? 'none' : 'inline-block';
+            document.getElementById('submitBtn').style.display = index === totalQuestions - 1 ? 'inline-block' : 'none';
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        window.onload = function() {
+            showQuestion(0);
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>MCQ Test</h1>
+        <form action="/submit_mcq" method="post">
+            <input type="hidden" name="role" value="{{ role }}">
+            <input type="hidden" name="email" value="{{ email }}">
+
+            {% for i in range(mcqs|length) %}
+            <div class="question-container">
+                <p>{{ i+1 }}. {{ mcqs[i].question }}</p>
+                <div class="options">
+                    {% for option in mcqs[i].options %}
+                        <label>
+                            <input type="radio" name="answer_{{ i }}" value="{{ option }}" required>
+                            {{ option }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="button-group">
+                <button type="button" id="prevBtn" onclick="prevQuestion()">Previous</button>
+                <button type="button" id="nextBtn" onclick="nextQuestion()">Next</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" id="submitBtn"><i class="bi bi-arrow-right icon"></i>&nbsp;&nbsp;Submit Test</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

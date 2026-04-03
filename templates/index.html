@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interview Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+      width: 450px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    h1 {
+      color: #444bd5;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    p {
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
+    }
+    video {
+      border-radius: 10px;
+      border: 3px solid #444bd5;
+      margin: 10px 0;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #444bd5;
+      font-size: 16px;
+      resize: none;
+      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button {
+      width: 180px;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      color: white;
+      background: linear-gradient(45deg, #444bd5, #657ae0);
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out, background 0.3s;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #657ae0, #a29bfe);
+    }
+    .speak {
+      background: linear-gradient(45deg, #230865, #36148e);
+    }
+    .next {
+      background: linear-gradient(45deg, #444bd5, #657ae0);
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  <script>
+    let recognition;
+    let warningCount = 0;
+    const MAX_WARNINGS = 5;
+
+    function speak(text) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1;
+      synth.speak(utterance);
+    }
+
+    function startRecognition() {
+      recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false; // Changed to false
+      recognition.continuous = false; // Changed to false
+  
+      // Clear previous recognition if any
+      if (window.currentRecognition) {
+          window.currentRecognition.stop();
+      }
+      window.currentRecognition = recognition;
+  
+      recognition.onresult = (event) => {
+          // Get the most stable result (not interim)
+          const transcript = event.results[0][0].transcript;
+          
+          // Get the answer box
+          const answerBox = document.getElementById("answer");
+          
+          // Only append if this is new content (not duplicate)
+          if (!answerBox.value.includes(transcript.trim())) {
+              answerBox.value = (answerBox.value + " " + transcript.trim()).trim();
+          }
+      };
+  
+      recognition.onend = () => {
+          // Automatically restart recognition when it ends
+          startRecognition();
+      };
+  
+      recognition.start();
+  }
+  
+  function stopRecognition() {
+      if (window.currentRecognition) {
+          window.currentRecognition.onend = null; // Prevent auto-restart
+          window.currentRecognition.stop();
+          window.currentRecognition = null;
+      }
+  }
+
+  function terminateInterview() {
+    // Hide the interview container
+    document.querySelector('.container').style.display = 'none';
+    
+    // Show termination message
+    document.getElementById('terminationMessage').style.display = 'block';
+    
+    // Stop all ongoing processes
+    stopRecognition();
+    stopWebcam();
+    
+    // Send termination notice to server
+    fetch('/terminate_interview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: '{{ email }}', reason: 'excessive_warnings' })
+    });
+}
+
+function stopWebcam() {
+    const video = document.getElementById('webcam');
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+    }
+}
+
+function showWarning(message) {
+    warningCount++;
+    alert(message);
+    
+    // Check if warning limit exceeded
+    if (warningCount >= MAX_WARNINGS) {
+        terminateInterview();
+    }
+}
+
+function startWebcam() {
+    const video = document.getElementById('webcam');
+    const constraints = { video: { facingMode: "user" } };
+
+    let warnedMultipleFaces = false;
+    let warnedNoFace = false;
+    let warnedMobile = false;
+
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+            video.srcObject = stream;
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            setInterval(() => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const imageData = canvas.toDataURL('image/jpeg');
+
+                fetch('/detect_faces', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: imageData })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const label = data.label;
+
+                    if (label === 'multiple_faces' && !warnedMultipleFaces) {
+                        showWarning("⚠️ Multiple faces detected! Only one person should be in front of the camera.");
+                        warnedMultipleFaces = true;
+                        warnedNoFace = false;
+                        warnedMobile = false;
+                    } else if (label === 'no_face' && !warnedNoFace) {
+                        showWarning("⚠️ Malicious activity detected.");
+                        warnedNoFace = true;
+                        warnedMultipleFaces = false;
+                        warnedMobile = false;
+                    } else if (label === 'mobile_detected' && !warnedMobile) {
+                        showWarning("📱 Mobile phone detected. Please remove it from view.");
+                        warnedMobile = true;
+                        warnedMultipleFaces = false;
+                        warnedNoFace = false;
+                    } else if (label === 'single_face') {
+                        warnedMultipleFaces = false;
+                        warnedNoFace = false;
+                        warnedMobile = false;
+                    }
+                });
+            }, 4000);
+        })
+        .catch((error) => {
+            console.error("Error accessing webcam:", error);
+        });
+  }
+
+    window.onload = function () {
+      const question = document.getElementById('question').textContent;
+      speak(question);
+      startWebcam();
+    };
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Interview Bot</h1>
+    <p><strong>Name:</strong> {{ name }}</p>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p><strong>College:</strong> {{ college }}</p>
+
+    {% if question %}
+      <p><strong id="question">{{ question }}</strong></p>
+      <div>
+        <video id="webcam" autoplay playsinline width="320" height="240"></video>
+      </div>
+      <br>
+      <form action="/submit" method="post">
+        <input type="hidden" name="question_num" value="{{ question_num }}">
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="college" value="{{ college }}">
+
+        <label for="answer">Your Answer:</label>
+        <textarea id="answer" name="answer" rows="4" cols="50" required></textarea>
+        <br><br>
+
+        <div class="button-container">
+          <button type="button" class="button speak" onclick="startRecognition()">🎤 Start Speaking</button>
+          <button type="button" class="button speak" onclick="stopRecognition()">🛑 Stop Speaking</button>
+          <button type="submit" class="button next">➡ Next Question</button>
+        </div>
+      </form>
+    {% else %}
+      <p>Thank you for completing the interview!</p>
+      <a href="/thank_you?email={{ email }}" class="button next">Finish</a>
+    {% endif %}
+  </div>
+  <div id="terminationMessage" style="display: none;">
+    <div class="container">
+      <h1>Interview Terminated</h1>
+      <p style="color: red; font-size: 24px;">Your test has been ended due to multiple misconduct activities.</p>
+      <a href="/thank_you?email={{ email }}" class="button next">Exit</a>
+    </div>
+  </div>
+</body>
+</html>

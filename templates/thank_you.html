@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Completed</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(129, 54, 234, 0.3);
+        }
+
+        h1 {
+            color: #28a745;
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        strong {
+            color: #28a745;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #218838, #1c7430);
+        }
+
+        .icon {
+            font-size: 24px;
+            color: white;
+            box-shadow: #a29bfe;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    {% if termination %}
+    <div class="alert alert-danger">
+        <h3>Interview Terminated</h3>
+        <p>Your interview was terminated due to multiple policy violations.</p>
+    </div>
+    {% else %}
+    <div class="container">
+        <h1>Thank You for Completing the Interview!</h1>
+        <p>Your responses have been recorded.</p>
+        <p><strong>Your Technical Score: {{ score }}/30</strong></p>
+        <p>We will update you soon regarding hiring via email at <strong>{{ email }}</strong>.</p>
+        
+        {% if pdf_path %}
+        <h3>Your Interview Performance Report</h3>
+        <iframe src="{{ pdf_path }}" width="100%" height="500px"></iframe>
+        <br>
+        <a href="{{ pdf_path }}" download class="button">Download Report</a>
+        {% endif %}
+    
+        
+        <div class="button-container">
+            <a href="{{ url_for('start') }}">
+                <button><i class="bi bi-house-up icon"></i>&nbsp;&nbsp;Go to Home</button>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>

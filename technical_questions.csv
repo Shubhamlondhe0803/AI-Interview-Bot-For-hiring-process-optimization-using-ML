@@ -1,0 +1,13 @@
+role,question,answer
+Full Stack Web Developer,SQL is what type of database?,It is a relational database.
+Full Stack Web Developer,What does REST API stand for?,It stands for Representational State Transfer.
+Full Stack Web Developer,What does React use for state management?,It uses state and props.
+Java Developer,JVM stands for what in Java?,It stands for Java Virtual Machine.
+Java Developer,What is Java used for?,It is used for backend development.
+Java Developer,Spring framework is used for?,It is used for Java application development.
+Python Developer,Python is what typed language?,It is dynamically typed language.
+Python Developer,What is a Python decorator?,It is a function that modifies functions.
+Python Developer,What does GIL stand for in Python?,It stands for Global Interpreter Lock.
+DotNet Developer,.NET Core is what type of framework?,It is a cross-platform framework.
+DotNet Developer,What is Dependency Injection in .NET?,It is a design pattern.
+DotNet Developer,.NET garbage collection manages what?,It manages memory automatically.

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Verbal Answer Report</h2>
+
+    <!-- Search Form -->
+    <form method="POST">
+        <div class="form-group">
+            <label for="candidate_id">Search by Candidate ID:</label>
+            <input type="text" name="candidate_id" id="candidate_id" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success mt-2">Search</button>
+    </form>
+
+    {% if candidate %}
+        <h3 class="mt-4">Results for Candidate ID: {{ candidate.id }}</h3>
+        <h4>Name: {{ candidate.name }}</h4>
+        <h5>Email: {{ candidate.email }}</h5>
+
+        {% if verbal_answers %}
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for answer in verbal_answers %}
+                    <tr>
+                        <td>{{ answer.question }}</td>
+                        <td>{{ answer.answer }}</td>
+                        <td>{{ answer.marks }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="mt-3 text-danger">No verbal answers found for this Candidate ID.</p>
+        {% endif %}
+    {% endif %}
+
+    <!-- Back to Home Button -->
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Home</a>
+
+</div>
+{% endblock %}

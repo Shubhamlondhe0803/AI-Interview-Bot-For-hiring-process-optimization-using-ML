@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Results</h1>
+        <div class="score-card">
+            <h2>Score: {{ correct_count }}/{{ total }}</h2>
+            <p>{{ (correct_count/total*100)|round(1) }}% correct</p>
+        </div>
+
+        {% for answer in answers %}
+        <div class="answer {% if answer.correct %}correct{% else %}incorrect{% endif %}">
+            <h3>Question {{ loop.index }}: {{ questions[loop.index0].title }} ({{ session['language']|capitalize }})</h3>
+            <p class="result-status">
+                {% if answer.correct %}✅ Correct{% else %}❌ Incorrect{% endif %}
+            </p>
+            <pre>{{ answer.code }}</pre>
+        </div>
+        {% endfor %}
+
+        <a href="{{ url_for('code') }}" class="btn">Try Again</a>
+    </div>
+</body>
+</html>
